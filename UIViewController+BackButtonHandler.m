@@ -33,21 +33,23 @@
 
 - (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item {
 
-	BOOL shouldPop = YES;
-
-	if([self.viewControllers count] == [navigationBar.items count]) { // if 'Back' button clicked
-
-		UIViewController* vc = [self topViewController];
-		if([vc respondsToSelector:@selector(navigationShouldPopOnBackButton)]) {
-			shouldPop = [vc navigationShouldPopOnBackButton];
-		}
-
-		if(shouldPop) {
-			[self popViewControllerAnimated:YES];
-		}
+	if([self.viewControllers count] < [navigationBar.items count]) {
+		return YES;
 	}
 
-	return shouldPop;
+	BOOL shouldPop = YES;
+	UIViewController* vc = [self topViewController];
+	if([vc respondsToSelector:@selector(navigationShouldPopOnBackButton)]) {
+		shouldPop = [vc navigationShouldPopOnBackButton];
+	}
+
+	if(shouldPop) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self popViewControllerAnimated:YES];
+		});
+	}
+
+	return NO;
 }
 
 @end
