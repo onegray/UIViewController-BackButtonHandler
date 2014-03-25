@@ -47,6 +47,15 @@
 		dispatch_async(dispatch_get_main_queue(), ^{
 			[self popViewControllerAnimated:YES];
 		});
+	} else {
+		// Workaround for iOS7.1. Thanks to @boliva - http://stackoverflow.com/posts/comments/34452906
+		for(UIView *subview in [navigationBar subviews]) {
+			if(subview.alpha < 1.) {
+				[UIView animateWithDuration:.25 animations:^{
+					subview.alpha = 1.;
+				}];
+			}
+		}
 	}
 
 	return NO;
