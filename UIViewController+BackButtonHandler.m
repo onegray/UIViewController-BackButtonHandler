@@ -44,9 +44,11 @@
 	}
 
 	if(shouldPop) {
-		dispatch_async(dispatch_get_main_queue(), ^{
-			[self popViewControllerAnimated:YES];
-		});
+		if(self.interactivePopGestureRecognizer.state != UIGestureRecognizerStateBegan) {
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[self popViewControllerAnimated:YES];
+			});
+		}
 	} else {
 		// Workaround for iOS7.1. Thanks to @boliva - http://stackoverflow.com/posts/comments/34452906
 		for(UIView *subview in [navigationBar subviews]) {
