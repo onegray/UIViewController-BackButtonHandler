@@ -24,6 +24,7 @@
 //
 
 #import "UIViewController+BackButtonHandler.h"
+#import <objc/runtime.h>
 
 @implementation UIViewController (BackButtonHandler)
 
@@ -31,7 +32,13 @@
 
 @implementation UINavigationController (ShouldPopOnBackButton)
 
-- (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item {
++ (void)load {
+	Method originalMethod = class_getInstanceMethod([self class], @selector(navigationBar:shouldPopItem:));
+	Method overloadingMethod = class_getInstanceMethod([self class], @selector(overloaded_navigationBar:shouldPopItem:));
+	method_setImplementation(originalMethod, method_getImplementation(overloadingMethod));
+}
+
+- (BOOL)overloaded_navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item {
 
 	if([self.viewControllers count] < [navigationBar.items count]) {
 		return YES;
