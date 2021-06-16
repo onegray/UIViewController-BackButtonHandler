@@ -1,0 +1,5 @@
+module UIViewController_BackButtonHandler {
+     umbrella header "UIViewController+BackButtonHandler/UIViewController+BackButtonHandler.h"
+     export *
+     module * { export * }
+ }
